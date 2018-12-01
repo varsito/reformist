@@ -5,7 +5,7 @@
 ## Install
 
 ```sh
-yarn add reformist
+yarn add @varsito/reformist
 ```
 
 ## Dev setup

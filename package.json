@@ -1,5 +1,5 @@
 {
-  "name": "reformist",
+  "name": "@varsito/reformist",
   "version": "1.0.0",
   "description": "a form validation and rendering library backed by mobx and ajv",
   "main": "index.js",
