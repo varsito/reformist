@@ -4,7 +4,8 @@
   "description": "a form validation and rendering library backed by mobx and ajv",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "jest"
   },
   "author": "Ashish Gaikwad <ash.gkwd@gmail.com>",
   "license": "MIT",
