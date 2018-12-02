@@ -19,5 +19,5 @@ yarn
 ## Run tests
 
 ```sh
-yarn jest
+yarn test
 ```
