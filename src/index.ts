@@ -1,6 +1,7 @@
 import Form from "./form";
 import Schema from "./schema";
 import { toJS } from "mobx";
+import _ from "lodash";
 
 var Symbol = require("es6-symbol");
 const formInstance = Symbol("form instance");
@@ -8,13 +9,12 @@ const formInstance = Symbol("form instance");
 class Reformist {
   static reformalize(clazz) {
     clazz.prototype.toServable = function() {
-      const servable = Object.keys(this.constructor.schema().properties).reduce(
-        (acc, path) => {
-          _.set(acc, path, toJS(_.get(this, path)));
-          return acc;
-        },
-        {}
-      );
+      const servable: { id?: string | number } = Object.keys(
+        this.constructor.schema().properties
+      ).reduce((acc, path) => {
+        _.set(acc, path, toJS(_.get(this, path)));
+        return acc;
+      }, {});
 
       servable.id = this.isNew ? undefined : this.id; // this is BaseModel specific
       return servable;

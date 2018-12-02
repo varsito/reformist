@@ -47,6 +47,7 @@ function isPresent(obj) {
 }
 
 let present_validator = {
+  errors: true,
   validate: (schema, data, parent_schema, property_name) => {
     if (schema === true) {
       if (!isPresent(data)) {
@@ -57,12 +58,16 @@ let present_validator = {
       }
     }
     return true;
-  },
-  errors: true
+  }
 };
 
 export default class Form {
-  constructor(model, schema, ajv) {
+  model: any;
+  ajv_validator: any;
+  ajv_errors: any;
+  schema: Schema;
+
+  constructor(model: any, schema, ajv) {
     this.model = model;
     ajv = ajv || new Ajv({ allErrors: true, coerceTypes: true });
     ajv.addKeyword("mandatory", present_validator);
@@ -182,6 +187,13 @@ export default class Form {
 }
 
 export class Field {
+  form: any;
+  parent: any;
+  field_name: string;
+  schema: Schema;
+  private: any;
+  cached_full_path: string[];
+
   constructor(form, parent, field_name, schema) {
     this.form = form;
     this.parent = parent;
@@ -218,7 +230,8 @@ export class Field {
 
   conditions = () => this.schema.conditions(this.field_name);
 
-  @computed get dependencies() {
+  @computed
+  get dependencies() {
     return this.schema.dependencies(this.field_name);
   }
 
@@ -307,7 +320,8 @@ export class Field {
     return this.errors.length;
   }
 
-  @computed get isHidden() {
+  @computed
+  get isHidden() {
     const deps = this.dependencies;
     return Boolean(
       deps.length && deps.every(d => d.resolve(this.form).isHidden)

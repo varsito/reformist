@@ -5,6 +5,9 @@ class FormError {
     return new this(path, params);
   }
 
+  path: string;
+  rawErrors: any[];
+
   constructor(path, errors) {
     this.path = path;
     this.rawErrors = _.isEmpty(errors) ? [] : errors;
@@ -21,6 +24,8 @@ export default class FormErrors {
   static from(params) {
     return params instanceof this ? params : new this(params);
   }
+
+  rawErrors: any[];
 
   constructor(params) {
     this.rawErrors = params;

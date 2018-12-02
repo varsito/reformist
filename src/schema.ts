@@ -50,7 +50,22 @@ export const getDeps = function(start) {
   return ret;
 };
 
+export interface ISchema {
+  type: string;
+  properties?: any;
+  items?: any[];
+  additionalItems?: boolean;
+  mandatory?: boolean | string;
+  enum?: any[];
+  default?: any;
+  description?: string;
+  title?: string;
+  conditional?: any;
+}
+
 class Schema {
+  schema: ISchema;
+
   constructor(schema, extras = {}) {
     if (schema.$ref) {
       schema = ref_to_class[schema.$ref].schema();
@@ -58,7 +73,7 @@ class Schema {
     this.schema = { ...schema, ...extras };
   }
 
-  withConditional(schema, conditional) {
+  withConditional(schema, conditional?: object) {
     conditional = conditional || this.schema.conditional;
     return new Schema(schema, { conditional });
   }
@@ -85,7 +100,7 @@ class Schema {
 
   hasConditions = field => !_.isEmpty(this.conditions(field));
 
-  conditions = field => {
+  conditions = (field?: string) => {
     const all = this.schema.conditional || [];
     if (!field) return all;
 
@@ -149,7 +164,7 @@ class Schema {
         if (idx < this.schema.items.length) {
           return this.withConditional(this.schema.items[idx]);
         } else {
-          if (this.schema.items.additionalItems !== false) {
+          if (this.schema.additionalItems !== false) {
             return this.withConditional(this.schema.additionalItems);
           } else {
             throw "No schema defined for additional items";
@@ -284,7 +299,14 @@ class Schema {
 
 export default Schema;
 
+interface IDependency {
+  field?: any;
+  if_eq?: any;
+  hide_if_not_mandatory?: boolean;
+}
+
 class Condition {
+  dependency: IDependency;
   constructor(dependency) {
     this.dependency = dependency;
   }
